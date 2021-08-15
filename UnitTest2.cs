@@ -65,16 +65,13 @@ namespace TestProject02
         private string phone(string phoneBook, string phoneNumber)
         {
             string result = "";
-
             string[] lines = phoneBook.Split('\n');
             // Linq match data
             var matchQuery = from word in lines
                              where word.Contains(phoneNumber)
                              select word;
-
             //count phone number is matched 
             int phone_match = matchQuery.Count();
-
             //validate phone number
             if (phone_match > 1)
             {
@@ -86,13 +83,10 @@ namespace TestProject02
             }
             else
             {
-                //split line
-               // string[] lines = phoneBook.Split('\n');
                 string name, address, cleanStr;
                 foreach (string phoneBookLine in lines)
                 {
-
-                    //find line of phone 
+                    //find line of phone number is matched
                     if (phoneBookLine.Contains(phoneNumber))
                     {
                         string line = phoneBookLine;
@@ -103,19 +97,16 @@ namespace TestProject02
                         int idx_name_last = line.IndexOf('>');
                         name = line.Substring(idx_name_first, idx_name_last - idx_name_first + 1);
 
-                        line = line.Replace(name, "");// remove name
+                        line = line.Replace(name, ""); //remove name
                         name = name.Trim('<', '>'); //remove < >
-
                         //find address
                         List<string> cleanStrList = new List<string>();
-                        foreach (string s in line.Split(' ')) //San Antonio $ TT-45120
+                        foreach (string s in line.Split(' ')) //ex line = San Antonio $ TT-45120
                         {
-                            cleanStr = Regex.Replace(s, "^[^a-zA-Z0-9]", string.Empty); //clean string
-                            if(!string.IsNullOrEmpty(cleanStr)) cleanStrList.Add(cleanStr);// add to list
-
+                            cleanStr = Regex.Replace(s, @"^\W", string.Empty); //remove special char from start string
+                            if (!string.IsNullOrEmpty(cleanStr)) cleanStrList.Add(cleanStr);//add to list when not empty
                         }
                         address = string.Join(" ", cleanStrList);
-
                         result = $"Phone => {phoneNumber}, Name => {name}, Address => {address}";
                         return result;
                     }
